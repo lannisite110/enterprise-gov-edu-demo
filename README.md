@@ -4,7 +4,9 @@
 
 # Enterprise & Government Education Demo
 
-国内政企内控**教学 Demo**（子库3）。
+国内政企内控**教学 Demo**（子库3）· **v0.2.0**
+
+**依赖**: `web3-edu-platform-core` ≥ **v0.3.0**
 
 **不含**军队、涉密、作战系统。
 

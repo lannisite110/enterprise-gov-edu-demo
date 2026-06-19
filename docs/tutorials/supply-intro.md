@@ -36,3 +36,7 @@ curl -X POST http://127.0.0.1:8080/api/v1/labs/edu.cn.gov.supply/simulate \
 ## 样例数据
 
 见 `plugins/supply/fixtures/sample-ledger.json`。
+
+---
+
+> **合规脚注** · `compliance_tier: cn_domain` · 虚构数据 only · Fabric 沙箱 only · 禁止军队/涉密/作战表述 · 不对接真实 WMS/ERP

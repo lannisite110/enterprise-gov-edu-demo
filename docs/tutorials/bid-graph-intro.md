@@ -35,3 +35,7 @@ curl -X POST http://127.0.0.1:8080/api/v1/labs/edu.cn.gov.bid-graph/simulate \
 ## 样例数据
 
 见 `plugins/bid-graph/fixtures/sample-graph.json`。
+
+---
+
+> **合规脚注** · `compliance_tier: cn_domain` · 虚构数据 only · Fabric 沙箱 only · 禁止军队/涉密/作战表述 · 教学评分不构成真实审计或采购决策

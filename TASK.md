@@ -53,3 +53,12 @@ enterprise-gov-edu-demo/
 同 `supervision-trace-edu-suite`，`validate-plugin` × 3 + `compliance-check` 无军队关键词。
 
 **CI 额外禁止词**: `军事`, `作战`, `weapon`, `classified`, `涉密`
+
+---
+
+## 6. v0.2.0 发布
+
+- **版本**: `0.2.0`（见 `VERSION`）
+- **主库依赖**: `web3-edu-platform-core` ≥ v0.3.0；manifest `coreVersion: ">=0.3.0 <0.4.0"`
+- **插件**: 3/3（bid-graph、multisig、supply）manifest 与 rules 已对齐主库 Phase 2 联调
+- **验收**: `bash scripts/verify-all.sh` + 主库 `make register-plugins PLUGINS_DIR=..`

@@ -40,3 +40,7 @@ curl -X POST http://127.0.0.1:8080/api/v1/labs/edu.cn.gov.multisig/simulate \
 ## 合约模板
 
 见 `plugins/contracts/MultiSigApprovalDemo.sol`。
+
+---
+
+> **合规脚注** · `compliance_tier: cn_domain` · 虚构数据 only · Sepolia 测试网 only · 禁止军队/涉密/作战表述 · 非真实 OA/政务审批系统

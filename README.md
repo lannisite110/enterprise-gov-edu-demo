@@ -4,9 +4,11 @@
 
 # Enterprise & Government Education Demo
 
-国内政企内控**教学 Demo**（子库3）· **v0.2.0**
+国内政企内控**教学 Demo**（子库3）· **v0.3.0**
 
-**依赖**: `web3-edu-platform-core` ≥ **v0.3.0**
+- [学习路径](docs/LEARNING_PATH.md) · [快速部署](docs/QUICK_DEPLOY.md)
+
+**依赖**: [web3-edu-platform-core](https://github.com/lannisite110/web3-edu-platform-core) **v1.0.0**
 
 **不含**军队、涉密、作战系统。
 

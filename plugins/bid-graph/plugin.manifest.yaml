@@ -3,7 +3,7 @@ kind: PluginPackage
 metadata:
   id: edu.cn.gov.bid-graph
   name: Bid Relationship Graph Simulation
-  version: 0.2.0
+  version: 0.3.0
   repo: enterprise-gov-edu-demo
   compliance_tier: cn_domain
 

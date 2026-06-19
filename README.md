@@ -8,7 +8,7 @@
 
 **不含**军队、涉密、作战系统。
 
-见 [AGENT_TASK.md](AGENT_TASK.md).
+见 [TASK.md](TASK.md).
 
 ## 插件清单
 

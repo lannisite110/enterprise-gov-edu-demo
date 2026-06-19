@@ -1,4 +1,4 @@
-# Agent-3 任务书 · enterprise-gov-edu-demo
+# 任务书 · enterprise-gov-edu-demo
 
 > **仓库**: `enterprise-gov-edu-demo`  
 > **compliance_tier**: `cn_domain`  
@@ -50,6 +50,6 @@ enterprise-gov-edu-demo/
 
 ## 5. 验收
 
-同 Agent-2，`validate-plugin` × 3 + `compliance-check` 无军队关键词。
+同 `supervision-trace-edu-suite`，`validate-plugin` × 3 + `compliance-check` 无军队关键词。
 
 **CI 额外禁止词**: `军事`, `作战`, `weapon`, `classified`, `涉密`

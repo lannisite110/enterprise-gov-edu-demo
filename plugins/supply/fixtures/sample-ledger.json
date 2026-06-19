@@ -1,0 +1,41 @@
+{
+  "channel": "edu-cn-gov-sandbox",
+  "org": "OrgEduDemo",
+  "asset_id": "MAT-2024-DEMO-001",
+  "description": "虚构办公物资批次（教学演示）",
+  "events": [
+    {
+      "seq": 1,
+      "type": "inbound",
+      "warehouse": "WH-DEMO-A",
+      "quantity": 100,
+      "unit": "件",
+      "operator": "经办人甲",
+      "timestamp": "2024-03-01T09:00:00Z",
+      "prev_hash": "0",
+      "payload_hash": "70d8b72629358124bcef6673492d1f4355700ae6f1f9d99393739b86238ff798"
+    },
+    {
+      "seq": 2,
+      "type": "transfer",
+      "warehouse": "WH-DEMO-B",
+      "quantity": 40,
+      "unit": "件",
+      "operator": "经办人乙",
+      "timestamp": "2024-03-05T14:30:00Z",
+      "prev_hash": "70d8b72629358124bcef6673492d1f4355700ae6f1f9d99393739b86238ff798",
+      "payload_hash": "312423bee46eb58653b3d9b36be866147bd962e8b57e6122327d35a1387600ed"
+    },
+    {
+      "seq": 3,
+      "type": "outbound",
+      "warehouse": "WH-DEMO-B",
+      "quantity": 15,
+      "unit": "件",
+      "operator": "经办人丙",
+      "timestamp": "2024-03-10T11:15:00Z",
+      "prev_hash": "312423bee46eb58653b3d9b36be866147bd962e8b57e6122327d35a1387600ed",
+      "payload_hash": "f41717e26d343ee466e22a534618455a757363c686733d2f5509ac49281f4017"
+    }
+  ]
+}

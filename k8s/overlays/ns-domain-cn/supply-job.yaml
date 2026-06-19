@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: supply-chain-demo
+  namespace: ns-domain-cn
+  labels:
+    edu.web3/plugin-id: edu.cn.gov.supply
+    edu.web3/compliance: fabric-sandbox
+    edu.web3/task-type: CN_SUPPLY_CHAIN_DEMO
+spec:
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        edu.web3/plugin-id: edu.cn.gov.supply
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: runner
+          image: edu-cn-domain/supply-chain-demo:0.1.0
+          env:
+            - name: CHAIN_ID
+              value: fabric-local
+            - name: FABRIC_CHANNEL
+              value: edu-cn-gov-sandbox
+            - name: TASK_TYPE
+              value: CN_SUPPLY_CHAIN_DEMO
+            - name: PLUGIN_ID
+              value: edu.cn.gov.supply
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

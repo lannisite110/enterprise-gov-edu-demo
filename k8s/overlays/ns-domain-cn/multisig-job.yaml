@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: multisig-approval-demo
+  namespace: ns-domain-cn
+  labels:
+    edu.web3/plugin-id: edu.cn.gov.multisig
+    edu.web3/compliance: testnet-only
+    edu.web3/task-type: CN_MULTISIG_APPROVAL_DEMO
+spec:
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        edu.web3/plugin-id: edu.cn.gov.multisig
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: runner
+          image: edu-cn-domain/multisig-approval-demo:0.1.0
+          env:
+            - name: CHAIN_ID
+              value: "11155111"
+            - name: RPC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: testnet-rpc-sepolia
+                  key: RPC_URL
+            - name: TASK_TYPE
+              value: CN_MULTISIG_APPROVAL_DEMO
+            - name: PLUGIN_ID
+              value: edu.cn.gov.multisig
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

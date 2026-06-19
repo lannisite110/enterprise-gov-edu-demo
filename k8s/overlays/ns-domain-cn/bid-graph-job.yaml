@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: bid-graph-sim
+  namespace: ns-domain-cn
+  labels:
+    edu.web3/plugin-id: edu.cn.gov.bid-graph
+    edu.web3/compliance: fabric-sandbox
+    edu.web3/task-type: CN_BID_GRAPH_SIM
+spec:
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        edu.web3/plugin-id: edu.cn.gov.bid-graph
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: runner
+          image: edu-cn-domain/bid-graph-sim:0.1.0
+          env:
+            - name: CHAIN_ID
+              value: fabric-local
+            - name: FABRIC_CHANNEL
+              value: edu-cn-gov-sandbox
+            - name: TASK_TYPE
+              value: CN_BID_GRAPH_SIM
+            - name: PLUGIN_ID
+              value: edu.cn.gov.bid-graph
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi

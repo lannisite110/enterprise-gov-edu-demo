@@ -1,0 +1,46 @@
+{
+  "description": "虚构招投标参与方与关联关系（教学演示，不对接政府采购网）",
+  "nodes": [
+    {
+      "id": "sup-a",
+      "name": "华东虚构建材有限公司",
+      "legal_rep": "张某某",
+      "address_prefix": "上海市浦东新区",
+      "bids": ["bid-2024-001", "bid-2024-003"]
+    },
+    {
+      "id": "sup-b",
+      "name": "浦东虚构工程咨询中心",
+      "legal_rep": "张某某",
+      "address_prefix": "上海市浦东新区",
+      "bids": ["bid-2024-001", "bid-2024-002"]
+    },
+    {
+      "id": "sup-c",
+      "name": "长三角虚构信息技术服务部",
+      "legal_rep": "李某某",
+      "address_prefix": "杭州市西湖区",
+      "bids": ["bid-2024-002", "bid-2024-004"]
+    },
+    {
+      "id": "sup-d",
+      "name": "西湖虚构设备供应站",
+      "legal_rep": "王某某",
+      "address_prefix": "杭州市西湖区",
+      "bids": ["bid-2024-003", "bid-2024-004"]
+    },
+    {
+      "id": "sup-e",
+      "name": "独立虚构贸易个体户",
+      "legal_rep": "赵某某",
+      "address_prefix": "南京市鼓楼区",
+      "bids": ["bid-2024-005"]
+    }
+  ],
+  "edges": [
+    { "source": "sup-a", "target": "sup-b", "type": "co_bid", "bid_id": "bid-2024-001" },
+    { "source": "sup-b", "target": "sup-c", "type": "co_bid", "bid_id": "bid-2024-002" },
+    { "source": "sup-a", "target": "sup-d", "type": "co_bid", "bid_id": "bid-2024-003" },
+    { "source": "sup-c", "target": "sup-d", "type": "co_bid", "bid_id": "bid-2024-004" }
+  ]
+}

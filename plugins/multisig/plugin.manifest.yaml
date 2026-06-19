@@ -1,0 +1,29 @@
+apiVersion: edu.web3/v1
+kind: PluginPackage
+metadata:
+  id: edu.cn.gov.multisig
+  name: Multisig Approval Demo
+  version: 0.1.0
+  repo: enterprise-gov-edu-demo
+  compliance_tier: cn_domain
+
+spec:
+  coreVersion: ">=0.1.0 <0.2.0"
+  taskTypes:
+    - CN_MULTISIG_APPROVAL_DEMO
+  namespaces:
+    - ns-domain-cn
+  allowedChainIds:
+    - 11155111
+  frontend:
+    routePrefix: /labs/edu.cn.gov.multisig
+    entry: plugins/frontend/multisig-plugin.ts
+  rules:
+    entry: plugins.rules.multisig:evaluate
+  contracts:
+    - path: plugins/contracts/MultiSigApprovalDemo.sol
+      language: solidity
+  k8s:
+    jobTemplate: k8s/overlays/ns-domain-cn/multisig-job.yaml
+  docs:
+    - docs/tutorials/multisig-intro.md

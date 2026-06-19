@@ -1,0 +1,26 @@
+apiVersion: edu.web3/v1
+kind: PluginPackage
+metadata:
+  id: edu.cn.gov.supply
+  name: Supply Chain Ledger Demo
+  version: 0.1.0
+  repo: enterprise-gov-edu-demo
+  compliance_tier: cn_domain
+
+spec:
+  coreVersion: ">=0.1.0 <0.2.0"
+  taskTypes:
+    - CN_SUPPLY_CHAIN_DEMO
+  namespaces:
+    - ns-domain-cn
+  allowedChainIds:
+    - fabric-local
+  frontend:
+    routePrefix: /labs/edu.cn.gov.supply
+    entry: plugins/frontend/supply-plugin.ts
+  rules:
+    entry: plugins.rules.supply_chain:evaluate
+  k8s:
+    jobTemplate: k8s/overlays/ns-domain-cn/supply-job.yaml
+  docs:
+    - docs/tutorials/supply-intro.md

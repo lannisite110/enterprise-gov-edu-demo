@@ -1,0 +1,26 @@
+apiVersion: edu.web3/v1
+kind: PluginPackage
+metadata:
+  id: edu.cn.gov.bid-graph
+  name: Bid Relationship Graph Simulation
+  version: 0.1.0
+  repo: enterprise-gov-edu-demo
+  compliance_tier: cn_domain
+
+spec:
+  coreVersion: ">=0.1.0 <0.2.0"
+  taskTypes:
+    - CN_BID_GRAPH_SIM
+  namespaces:
+    - ns-domain-cn
+  allowedChainIds:
+    - fabric-local
+  frontend:
+    routePrefix: /labs/edu.cn.gov.bid-graph
+    entry: plugins/frontend/plugin.ts
+  rules:
+    entry: plugins.rules.bid_graph:evaluate
+  k8s:
+    jobTemplate: k8s/overlays/ns-domain-cn/bid-graph-job.yaml
+  docs:
+    - docs/tutorials/bid-graph-intro.md

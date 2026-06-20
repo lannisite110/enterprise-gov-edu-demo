@@ -1,8 +1,8 @@
 # 学习路径 · Enterprise Gov Edu Demo（子库3）
 
-> **本仓** v0.4.0 · 主库 **≥ v1.0.0** · 3 个政企内控教学插件。
+> **本仓** v0.4.0 · 主库 **v1.1.0** · 3 个政企内控教学插件 · 主库 **阶段 3C**
 
-**完整路线（推荐）** → **[GOV_LEARNING_PATH.md](GOV_LEARNING_PATH.md)**
+**完整路线（推荐）** → **[GOV_LEARNING_PATH.md](GOV_LEARNING_PATH.md)** · [tutorials/README.md](tutorials/README.md)
 
 | 顺序 | 插件 | 教程 |
 |------|------|------|

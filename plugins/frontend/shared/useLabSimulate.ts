@@ -90,7 +90,7 @@ export function useLabSimulate(
 
       const res = await fetch(`/api/v1/labs/${pluginId}/simulate`, {
         method: 'POST',
-        headers: { 'Content-Type: application/json' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
       const data = (await res.json()) as SimulateResult

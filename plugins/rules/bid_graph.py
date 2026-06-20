@@ -133,6 +133,8 @@ def analyze_graph(graph: dict[str, Any]) -> dict[str, Any]:
     components = _union_find_components(nodes, edges)
     score, findings = _suspicion_score(nodes, edges, rep_clusters, addr_clusters, components)
 
+    risk_level = "high" if score >= 70 else "medium" if score >= 40 else "low"
+
     return {
         "node_count": len(nodes),
         "edge_count": len(edges),
@@ -141,6 +143,7 @@ def analyze_graph(graph: dict[str, Any]) -> dict[str, Any]:
         "shared_address_clusters": addr_clusters,
         "co_bid_edges": len(_co_bid_pairs(edges)),
         "suspicion_score": score,
+        "risk_level": risk_level,
         "findings": findings,
         "disclaimer": "虚构数据 · 教学算法演示 · 不构成真实审计结论",
     }
@@ -158,11 +161,14 @@ def evaluate(inp: RuleInput) -> RuleOutput:
 
     graph = _load_graph(inp.params)
     report = analyze_graph(graph)
+    scenario = str(inp.params.get("scenario", "sample"))
 
     hints = [
         f"suspicion_score={report['suspicion_score']}",
+        f"risk_level={report['risk_level']}",
         f"nodes={report['node_count']}",
         f"edges={report['edge_count']}",
+        f"graph_source={scenario}",
         *report["findings"][:6],
         report["disclaimer"],
     ]

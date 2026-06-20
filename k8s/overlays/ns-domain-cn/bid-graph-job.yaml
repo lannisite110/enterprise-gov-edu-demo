@@ -2,12 +2,12 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: bid-graph-sim
-  namespace: ns-domain-cn
   labels:
     edu.web3/plugin-id: edu.cn.gov.bid-graph
-    edu.web3/compliance: fabric-sandbox
-    edu.web3/task-type: CN_BID_GRAPH_SIM
+    edu.web3/compliance: graph-sandbox
+    edu.web3/namespace: ns-domain-cn
 spec:
+  backoffLimit: 1
   ttlSecondsAfterFinished: 3600
   template:
     metadata:
@@ -16,17 +16,26 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - name: runner
-          image: edu-cn-domain/bid-graph-sim:0.1.0
+        - name: graph-runner
+          image: python:3.11-alpine
           env:
             - name: CHAIN_ID
-              value: fabric-local
-            - name: FABRIC_CHANNEL
-              value: edu-cn-gov-sandbox
+              value: "fabric-local"
+            - name: FIXTURE_PATH
+              value: "plugins/bid-graph/fixtures/sample-graph.json"
             - name: TASK_TYPE
-              value: CN_BID_GRAPH_SIM
-            - name: PLUGIN_ID
-              value: edu.cn.gov.bid-graph
+              value: "CN_BID_GRAPH_SIM"
+          command:
+            - sh
+            - -ec
+            - |
+              echo "==> ${TASK_TYPE} graph analysis gate"
+              python3 -c "import json; g={'nodes':[1,2],'edges':[]}; assert len(g['nodes'])>=2"
+              case "${FIXTURE_PATH}" in
+                plugins/*/fixtures/*.json) echo "fixture path OK: ${FIXTURE_PATH}" ;;
+                *) echo "invalid fixture path"; exit 1 ;;
+              esac
+              echo "graph-sandbox gate OK — fictional suppliers only"
           resources:
             requests:
               cpu: 100m

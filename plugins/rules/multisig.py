@@ -88,11 +88,14 @@ def evaluate(inp: RuleInput) -> RuleOutput:
         )
 
     report = simulate_approval(inp.params)
+    proposal_id = str(inp.params.get("proposal_id", "PROPOSAL-DEMO-001"))
     hints = [
+        f"proposal_id={proposal_id}",
         f"threshold={threshold}-of-{len(approvers)}",
         f"status={report['status']}",
         f"confirmations={report['confirmation_count']}",
-        f"chain_id={_SEPOLIA} (Sepolia testnet)",
+        f"approved={'true' if report['approved'] else 'false'}",
+        f"chain_id={_SEPOLIA}",
         report["disclaimer"],
     ]
 

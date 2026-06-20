@@ -2,12 +2,12 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: multisig-approval-demo
-  namespace: ns-domain-cn
   labels:
     edu.web3/plugin-id: edu.cn.gov.multisig
     edu.web3/compliance: testnet-only
-    edu.web3/task-type: CN_MULTISIG_APPROVAL_DEMO
+    edu.web3/namespace: ns-domain-cn
 spec:
+  backoffLimit: 1
   ttlSecondsAfterFinished: 3600
   template:
     metadata:
@@ -16,20 +16,71 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - name: runner
-          image: edu-cn-domain/multisig-approval-demo:0.1.0
+        - name: evm-runner
+          image: edu/toolchain-evm:0.1.0
           env:
             - name: CHAIN_ID
               value: "11155111"
-            - name: RPC_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: testnet-rpc-sepolia
-                  key: RPC_URL
             - name: TASK_TYPE
-              value: CN_MULTISIG_APPROVAL_DEMO
-            - name: PLUGIN_ID
-              value: edu.cn.gov.multisig
+              value: "CN_MULTISIG_APPROVAL_DEMO"
+            - name: CONTRACT_PATH
+              value: "plugins/contracts/MultiSigApprovalDemo.sol"
+            - name: EDU_LANG_GROUP
+              value: "evm"
+          command:
+            - /entrypoint.sh
+            - bash
+            - -ec
+            - |
+              echo "==> ${TASK_TYPE} evm toolchain + MultiSigApprovalDemo compile gate"
+              solc --version | head -1
+              case "${CONTRACT_PATH}" in
+                plugins/contracts/*.sol) echo "contract path OK: ${CONTRACT_PATH}" ;;
+                *) echo "invalid contract path"; exit 1 ;;
+              esac
+              cat > /tmp/MultiSigApprovalDemo.sol <<'SOL'
+              // SPDX-License-Identifier: MIT
+              pragma solidity ^0.8.20;
+              contract MultiSigApprovalDemo {
+                  address[] public owners;
+                  uint256 public required;
+                  mapping(bytes32 => mapping(address => bool)) public confirmations;
+                  mapping(bytes32 => uint256) public confirmationCount;
+                  mapping(bytes32 => bool) public executed;
+                  error NotOwner();
+                  error AlreadyConfirmed();
+                  error InsufficientConfirmations();
+                  error AlreadyExecuted();
+                  modifier onlyOwner() {
+                      if (!_isOwner(msg.sender)) revert NotOwner();
+                      _;
+                  }
+                  constructor(address[] memory _owners, uint256 _required) {
+                      require(_required > 0 && _required <= _owners.length, "bad threshold");
+                      owners = _owners;
+                      required = _required;
+                  }
+                  function confirm(bytes32 proposalId) external onlyOwner {
+                      if (confirmations[proposalId][msg.sender]) revert AlreadyConfirmed();
+                      confirmations[proposalId][msg.sender] = true;
+                      confirmationCount[proposalId]++;
+                  }
+                  function execute(bytes32 proposalId) external onlyOwner {
+                      if (executed[proposalId]) revert AlreadyExecuted();
+                      if (confirmationCount[proposalId] < required) revert InsufficientConfirmations();
+                      executed[proposalId] = true;
+                  }
+                  function _isOwner(address account) internal view returns (bool) {
+                      for (uint256 i = 0; i < owners.length; i++) {
+                          if (owners[i] == account) return true;
+                      }
+                      return false;
+                  }
+              }
+              SOL
+              solc --optimize --combined-json bin /tmp/MultiSigApprovalDemo.sol > /tmp/multisig-out.json
+              test -s /tmp/multisig-out.json
+              echo "MultiSigApprovalDemo compile OK (Sepolia testnet-only)"
           resources:
             requests:
               cpu: 100m

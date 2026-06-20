@@ -1,46 +1,75 @@
-# 多级多签审批 · 教学 Demo
+# 多级多签审批 · 分步实验
 
-> **plugin_id**: `edu.cn.gov.multisig`  
-> **TaskType**: `CN_MULTISIG_APPROVAL_DEMO`  
-> **Namespace**: `ns-domain-cn` · **chainId**: `11155111` (Sepolia)
+> **插件**: `edu.cn.gov.multisig` · **TaskType**: `CN_MULTISIG_APPROVAL_DEMO` · **chainId**: Sepolia `11155111`  
+> **合约**: `plugins/contracts/MultiSigApprovalDemo.sol` · **Job**: `k8s/overlays/ns-domain-cn/multisig-job.yaml`  
+> **路线**: [GOV_LEARNING_PATH.md](../GOV_LEARNING_PATH.md) 第 2 步
 
-## 教学目标
+---
 
-演示政企内控场景中的**多签权限模型**：N 个审批人、M-of-N 阈值、提案确认与执行分离。
+## 学习目标
 
-## 功能说明
+- 理解 M-of-N 多签**权限模型**（confirm / execute 分离）  
+- 通过 UI **逐步勾选**签名人观察 `approved` hints  
+- 了解 Sepolia 测试网合约模板定位  
 
-- 规则引擎：模拟 2-of-3 审批流（可配置 threshold / confirmations）
-- 合约模板：`plugins/contracts/MultiSigApprovalDemo.sol`（Sepolia 测试网部署）
+---
 
-## 合规说明
+## 前置条件
 
-- 非真实 OA/政务审批系统
-- 仅 Sepolia 测试网，禁止主网部署
-- 不涉及军队、涉密、作战表述
+- 建议先完成 [bid-graph-intro.md](bid-graph-intro.md)  
+- 主库 backend 已启动  
 
-## 联调示例
+---
+
+## 分步实验
+
+### 步骤 1：打开 Lab
+
+`http://127.0.0.1:5173/labs/edu.cn.gov.multisig`
+
+### 步骤 2：未达阈值
+
+1. 阈值设为 `2`  
+2. 仅勾选 **Owner 1**  
+3. 提交 → `approved=false` · status=pending  
+
+### 步骤 3：达阈值
+
+1. 勾选 Owner 1 + Owner 2  
+2. 提交 → `approved=true` · status=approved  
+
+### 步骤 4：curl 验证
 
 ```bash
-curl -X POST http://127.0.0.1:8080/api/v1/labs/edu.cn.gov.multisig/simulate \
+curl -s -X POST http://127.0.0.1:8080/api/v1/labs/edu.cn.gov.multisig/simulate \
   -H 'Content-Type: application/json' \
   -d '{
     "user_prompt": "多签审批演示",
     "params": {
+      "proposal_id": "PROPOSAL-DEMO-001",
       "threshold": 2,
       "confirmations": [
         "0x1111111111111111111111111111111111111111",
         "0x2222222222222222222222222222222222222222"
       ]
     },
-    "allowed_chain_ids": [11155111]
-  }'
+    "allowed_chain_ids": [11155111],
+    "task_type": "CN_MULTISIG_APPROVAL_DEMO"
+  }' | jq '.evaluation.audit_hints'
 ```
 
-## 合约模板
+### 步骤 5：自检清单
 
-见 `plugins/contracts/MultiSigApprovalDemo.sol`。
+- [ ] 进度条随勾选变化  
+- [ ] 三步审批状态指示正确  
+- [ ] K8s Job 可 solc 编译 MultiSig 合约片段  
 
 ---
 
-> **合规脚注** · `compliance_tier: cn_domain` · 虚构数据 only · Sepolia 测试网 only · 禁止军队/涉密/作战表述 · 非真实 OA/政务审批系统
+## 合规说明
+
+- 非真实 OA/政务系统 · Sepolia only · 禁止主网  
+
+---
+
+> **合规脚注** · 虚构审批流 · Sepolia 测试网 only · 非真实 OA/政务审批系统

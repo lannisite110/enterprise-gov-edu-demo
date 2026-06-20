@@ -2,12 +2,12 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: supply-chain-demo
-  namespace: ns-domain-cn
   labels:
     edu.web3/plugin-id: edu.cn.gov.supply
     edu.web3/compliance: fabric-sandbox
-    edu.web3/task-type: CN_SUPPLY_CHAIN_DEMO
+    edu.web3/namespace: ns-domain-cn
 spec:
+  backoffLimit: 1
   ttlSecondsAfterFinished: 3600
   template:
     metadata:
@@ -16,17 +16,32 @@ spec:
     spec:
       restartPolicy: Never
       containers:
-        - name: runner
-          image: edu-cn-domain/supply-chain-demo:0.1.0
+        - name: fabric-runner
+          image: hyperledger/fabric-tools:2.5
           env:
             - name: CHAIN_ID
-              value: fabric-local
+              value: "fabric-local"
             - name: FABRIC_CHANNEL
-              value: edu-cn-gov-sandbox
+              value: "edu-cn-gov-sandbox"
+            - name: FABRIC_ORG
+              value: "OrgEduDemo"
+            - name: FIXTURE_PATH
+              value: "plugins/supply/fixtures/sample-ledger.json"
             - name: TASK_TYPE
-              value: CN_SUPPLY_CHAIN_DEMO
-            - name: PLUGIN_ID
-              value: edu.cn.gov.supply
+              value: "CN_SUPPLY_CHAIN_DEMO"
+          command:
+            - sh
+            - -ec
+            - |
+              echo "==> ${TASK_TYPE} fabric-local toolchain gate"
+              peer version | head -1
+              configtxgen -version 2>/dev/null | head -1 || true
+              case "${FIXTURE_PATH}" in
+                plugins/*/fixtures/*.json) echo "fixture path OK: ${FIXTURE_PATH}" ;;
+                *) echo "invalid fixture path"; exit 1 ;;
+              esac
+              echo "channel=${FABRIC_CHANNEL} org=${FABRIC_ORG}"
+              echo "fabric-sandbox gate OK — fictional supply ledger only"
           resources:
             requests:
               cpu: 100m

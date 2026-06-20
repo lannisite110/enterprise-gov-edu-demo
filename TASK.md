@@ -8,6 +8,9 @@
 
 ## 1. 目标
 
+> 分阶段深化见 [docs/GOV_PHASES.md](docs/GOV_PHASES.md)（**v0.4.0** ✅）  
+> 学习路线：[docs/GOV_LEARNING_PATH.md](docs/GOV_LEARNING_PATH.md)
+
 3 个**政企内控教学 Demo**（无军队/涉密/作战表述）。
 
 | # | 模块 | plugin_id | TaskType |
@@ -50,7 +53,13 @@ enterprise-gov-edu-demo/
 
 ## 5. 验收
 
-同 `supervision-trace-edu-suite`，`validate-plugin` × 3 + `compliance-check` 无军队关键词。
+```bash
+cd ~/web3home/enterprise-gov-edu-demo
+make validate && make smoke
+bash scripts/joint-debug-smoke.sh   # 含 gateway 全链路（可选）
+```
+
+`validate-plugin` × 3 + `compliance-check` 无军队关键词。
 
 **CI 额外禁止词**: `军事`, `作战`, `weapon`, `classified`, `涉密`
 

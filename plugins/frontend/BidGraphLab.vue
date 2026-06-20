@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { useLabSimulate } from './shared/useLabSimulate'
 import { parseHints, hintNumber } from './shared/parseHints'
+import LabAssistDrawer from '@/components/LabAssistDrawer.vue'
 
 const scenario = ref('sample')
 const { loading, error, result, taskStatus, taskReport, runSimulate, parseEvaluation } =
@@ -51,6 +52,8 @@ function runAnalysis() {
     { taskType: 'CN_BID_GRAPH_SIM' },
   )
 }
+
+const assistParams = computed(() => ({ graph: 'sample', scenario: scenario.value }))
 </script>
 
 <template>
@@ -124,6 +127,12 @@ function runAnalysis() {
 
     <pre v-if="taskReport" class="result">{{ JSON.stringify(taskReport, null, 2) }}</pre>
     <pre v-else-if="result" class="result">{{ JSON.stringify(result, null, 2) }}</pre>
+
+    <LabAssistDrawer
+      plugin-id="edu.cn.gov.bid-graph"
+      :params="assistParams"
+      :audit-hints="evaluation?.audit_hints"
+    />
   </section>
 </template>
 

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useLabI18n } from '@/composables/useLabI18n'
 import { useLabSimulate } from './shared/useLabSimulate'
 import { parseHints, hintNumber } from './shared/parseHints'
 import LabAssistDrawer from '@/components/LabAssistDrawer.vue'
+
+const { t } = useLabI18n('edu.cn.gov.bid-graph')
 
 const scenario = ref('sample')
 const { loading, error, result, taskStatus, taskReport, runSimulate, parseEvaluation } =
@@ -61,18 +64,16 @@ const assistParams = computed(() => ({ graph: 'sample', scenario: scenario.value
     <header class="lab-header">
       <img src="/assets/icon.png" alt="" width="32" height="32" />
       <div>
-        <h1>招投标关联图谱</h1>
-        <p class="muted">虚构供应商节点 · 纯图算法教学 · 不对接政府采购网</p>
+        <h1>{{ t('title') }}</h1>
+        <p class="muted">{{ t('subtitle') }}</p>
       </div>
     </header>
 
     <div v-if="evaluation" class="eval-card">
-      <h2>规则评估</h2>
-      <p class="ok">✓ 合规通过 · {{ evaluation.recommended_language }}</p>
+      <h2>{{ t('ruleEval') }}</h2>
+      <p class="ok">{{ t('evalDetail', { lang: evaluation.recommended_language }) }}</p>
       <p>
-        <strong>教学评分:</strong> {{ suspicionScore }}/100
-        · <strong>风险:</strong> {{ riskLevel }}
-        · 节点 {{ hints.nodes }} / 边 {{ hints.edges }}
+        {{ t('scoreLine', { score: suspicionScore, risk: riskLevel, nodes: hints.nodes, edges: hints.edges }) }}
       </p>
       <div class="score-bar">
         <div class="score-fill" :style="{ width: scorePercent + '%' }" :class="riskLevel" />
@@ -81,22 +82,22 @@ const assistParams = computed(() => ({ graph: 'sample', scenario: scenario.value
 
     <div class="lab-grid">
       <div class="card">
-        <h2>分析控制</h2>
+        <h2>{{ t('controls') }}</h2>
         <label>
-          场景
+          {{ t('scenario') }}
           <select v-model="scenario">
-            <option value="sample">sample-graph（默认）</option>
+            <option value="sample">{{ t('scenarioSample') }}</option>
           </select>
         </label>
         <button :disabled="loading" @click="runAnalysis">
-          {{ loading ? '分析中…' : '运行关联分析' }}
+          {{ loading ? t('analyzing') : t('runAnalysis') }}
         </button>
-        <p v-if="taskStatus" class="status">任务状态: {{ taskStatus }}</p>
+        <p v-if="taskStatus" class="status">{{ t('taskStatus') }}: {{ taskStatus }}</p>
         <p v-if="error" class="error">{{ error }}</p>
       </div>
 
       <div class="card graph-card">
-        <h2>关联图谱（示意）</h2>
+        <h2>{{ t('graphTitle') }}</h2>
         <svg viewBox="0 0 100 80" class="graph-svg">
           <line
             v-for="(e, i) in graphEdges"
@@ -113,15 +114,15 @@ const assistParams = computed(() => ({ graph: 'sample', scenario: scenario.value
             <text :x="n.x" :y="n.y + 8" text-anchor="middle" class="node-label">{{ n.id }}</text>
           </g>
         </svg>
-        <p class="muted">橙色：共享法人「张某某」节点</p>
+        <p class="muted">{{ t('sharedRepHint') }}</p>
       </div>
 
       <div class="card">
-        <h2>评分解释</h2>
+        <h2>{{ t('scoreExplain') }}</h2>
         <ul v-if="textFindings.length" class="findings">
           <li v-for="(f, i) in textFindings" :key="i">{{ f }}</li>
         </ul>
-        <p v-else class="muted">提交分析后显示 findings</p>
+        <p v-else class="muted">{{ t('findingsAfterSubmit') }}</p>
       </div>
     </div>
 

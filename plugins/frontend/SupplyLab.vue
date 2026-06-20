@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useLabI18n } from '@/composables/useLabI18n'
 import { useLabSimulate } from './shared/useLabSimulate'
 import { parseHints, hintBool, hintNumber } from './shared/parseHints'
+
+const { t } = useLabI18n('edu.cn.gov.supply')
 
 const simulateBreak = ref(false)
 const assetId = ref('MAT-2024-DEMO-001')
@@ -20,11 +23,18 @@ const demoEvents = [
   { seq: 3, type: 'outbound', warehouse: 'WH-DEMO-B', quantity: 15, delta: -15 },
 ]
 
+function eventTypeLabel(type: string) {
+  if (type === 'inbound') return t('type_inbound')
+  if (type === 'transfer') return t('type_transfer')
+  if (type === 'outbound') return t('type_outbound')
+  return type
+}
+
 const inventoryTimeline = computed(() => {
   let stock = 0
   return demoEvents.map((e) => {
     stock += e.delta
-    return { ...e, stock }
+    return { ...e, stock, typeLabel: eventTypeLabel(e.type) }
   })
 })
 
@@ -52,47 +62,47 @@ function runVerify() {
     <header class="lab-header">
       <img src="/assets/icon.png" alt="" width="32" height="32" />
       <div>
-        <h1>物资供应链存证</h1>
-        <p class="muted">Fabric 沙箱 · 出入库哈希链 · 虚构批次数据</p>
+        <h1>{{ t('title') }}</h1>
+        <p class="muted">{{ t('subtitle') }}</p>
       </div>
     </header>
 
     <div v-if="evaluation" class="eval-card" :class="{ broken: !chainIntact }">
-      <h2>规则评估</h2>
-      <p v-if="chainIntact" class="ok">✓ 合规通过 · {{ evaluation.recommended_language }}</p>
-      <p v-else class="warn">⚠ 哈希链校验失败（教学演示）</p>
+      <h2>{{ t('ruleEval') }}</h2>
+      <p v-if="chainIntact" class="ok">{{ t('compliancePass') }} · {{ evaluation.recommended_language }}</p>
+      <p v-else class="warn">{{ t('chainBroken') }}</p>
       <p>
-        <strong>库存:</strong> {{ balance }} 件
-        · <strong>事件:</strong> {{ hints.event_count }}
+        <strong>{{ t('stock') }}:</strong> {{ balance }} {{ t('pieces') }}
+        · <strong>{{ t('events') }}:</strong> {{ hints.event_count }}
       </p>
-      <p v-if="hints.merkle_root"><strong>Merkle:</strong> <code>{{ hints.merkle_root }}</code></p>
+      <p v-if="hints.merkle_root"><strong>{{ t('merkleRoot') }}:</strong> <code>{{ hints.merkle_root }}</code></p>
     </div>
 
     <div class="lab-grid">
       <div class="card">
-        <h2>存证校验</h2>
-        <label>物资 ID <input v-model="assetId" /></label>
+        <h2>{{ t('verifySection') }}</h2>
+        <label>{{ t('assetId') }} <input v-model="assetId" /></label>
         <label class="check-row">
           <input v-model="simulateBreak" type="checkbox" />
-          模拟哈希链断点（教学）
+          {{ t('simulateBreak') }}
         </label>
         <button :disabled="loading" @click="runVerify">
-          {{ loading ? '校验中…' : '校验存证链' }}
+          {{ loading ? t('verifying') : t('runVerify') }}
         </button>
-        <p v-if="taskStatus" class="status">任务状态: {{ taskStatus }}</p>
+        <p v-if="taskStatus" class="status">{{ t('taskStatus') }}: {{ taskStatus }}</p>
         <p v-if="error" class="error">{{ error }}</p>
       </div>
 
       <div class="card">
-        <h2>库存曲线</h2>
+        <h2>{{ t('eventTimeline') }}</h2>
         <table>
           <thead>
-            <tr><th>#</th><th>类型</th><th>仓库</th><th>Δ</th><th>结存</th></tr>
+            <tr><th>{{ t('seq') }}</th><th>{{ t('type') }}</th><th>{{ t('warehouse') }}</th><th>Δ</th><th>{{ t('stock') }}</th></tr>
           </thead>
           <tbody>
             <tr v-for="e in inventoryTimeline" :key="e.seq">
               <td>{{ e.seq }}</td>
-              <td>{{ e.type }}</td>
+              <td>{{ e.typeLabel }}</td>
               <td>{{ e.warehouse }}</td>
               <td>{{ e.delta > 0 ? '+' + e.delta : e.delta }}</td>
               <td><strong>{{ e.stock }}</strong></td>
@@ -102,10 +112,10 @@ function runVerify() {
       </div>
 
       <div class="card">
-        <h2>哈希链示意</h2>
+        <h2>{{ t('chain') }}</h2>
         <ol class="hash-chain">
           <li v-for="e in demoEvents" :key="e.seq" :class="{ broken: simulateBreak && e.seq === 3 }">
-            #{{ e.seq }} {{ e.type }}
+            #{{ e.seq }} {{ eventTypeLabel(e.type) }}
             <span v-if="simulateBreak && e.seq === 3" class="warn-tag">prev_hash ✗</span>
             <span v-else class="ok-tag">→</span>
           </li>
